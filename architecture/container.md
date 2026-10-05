@@ -1,38 +1,89 @@
 # Diagram 2 – C4 Container: SRJ Student Ride Booking (MVP)
 
 ```mermaid
-C4Container
+flowchart TB
 
-title C4 Container: SRJ Student Ride Booking (MVP)
+%% =========================
+%% ACTORS
+%% =========================
 
-Person(student, "Student", "Books rides to school")
-Person(driver, "Tricycle Driver", "Accepts rides and updates trips")
-Person(coordinator, "Coordinator", "Manages drivers and reviews metrics")
+student["<b>Student</b><br/>[Person]<br/><br/>Books rides to school"]
 
-System_Boundary(srj, "SRJ Ride Booking") {
+driver["<b>Tricycle Driver</b><br/>[Person]<br/><br/>Accepts rides and updates trips"]
 
-    Container(web, "Web App", "Next.js / React in the browser", "Booking, driver and coordinator pages")
+coordinator["<b>Coordinator</b><br/>[Person]<br/><br/>Manages drivers and reviews metrics"]
 
-    Container(api, "API", "Next.js route handlers on Node.js", "Applies booking rules, matches drivers and sets trip status")
-}
+%% =========================
+%% SRJ SYSTEM BOUNDARY
+%% =========================
 
-ContainerDb(database, "Database", "PostgreSQL", "Stores users, bookings, location updates and notifications")
+subgraph SRJ["<b>SRJ Ride Booking</b><br/>[Software System]"]
 
-System_Ext(maps, "Maps Provider", "Distance and ETA")
+    web["<b>Web App (UI)</b><br/><br/>[Container: Next.js / React in the browser]<br/><br/>Booking, driver and coordinator pages"]
 
-System_Ext(notification, "Notification Provider", "Email or SMS alerts")
+    api["<b>API</b><br/><br/>[Container: Next.js route handlers on Node.js]<br/><br/>Applies booking rules, matches drivers and sets trip status"]
 
-Rel_D(student, web, "Books and follows rides using", "HTTPS")
+end
 
-Rel_D(driver, web, "Accepts rides and updates trips using", "HTTPS")
+%% =========================
+%% EXTERNAL SYSTEMS
+%% =========================
 
-Rel_D(coordinator, web, "Manages drivers and reads metrics using", "HTTPS")
+database[("<b>Database</b><br/><br/>[Container: PostgreSQL]<br/><br/>Stores users, bookings,<br/>location updates and notifications")]
 
-Rel_R(web, api, "Sends booking, trip and tracking requests (status polled every few seconds)", "HTTPS/JSON")
+maps["<b>Maps Provider</b><br/><br/>[External System]<br/><br/>Distance and ETA"]
 
-Rel_D(api, database, "Reads and writes records", "SQL over TCP (TLS)")
+notification["<b>Notification Provider</b><br/><br/>[External System]<br/><br/>Email or SMS alerts"]
 
-Rel_R(api, maps, "Gets distance and ETA", "HTTPS/JSON")
+%% =========================
+%% ACTOR → WEB APP
+%% =========================
 
-Rel_R(api, notification, "Sends booking alerts", "HTTPS/JSON")
+student -->|"Books and follows rides using<br/><i>[HTTPS]</i>"| web
+
+driver -->|"Accepts rides and updates trips using<br/><i>[HTTPS]</i>"| web
+
+coordinator -->|"Manages drivers and reads metrics using<br/><i>[HTTPS]</i>"| web
+
+%% =========================
+%% WEB APP → API
+%% =========================
+
+web -->|"Sends booking, trip and tracking requests<br/>(status polled every few seconds)<br/><i>[HTTPS/JSON]</i>"| api
+
+%% =========================
+%% API → EXTERNAL SYSTEMS
+%% =========================
+
+api -->|"Reads and writes records<br/><i>[SQL over TCP (TLS)]</i>"| database
+
+api -->|"Gets distance and ETA<br/><i>[HTTPS/JSON]</i>"| maps
+
+api -->|"Sends booking alerts<br/><i>[HTTPS/JSON]</i>"| notification
+
+%% =========================
+%% LAYOUT HELPERS
+%% =========================
+
+student ~~~ driver
+driver ~~~ coordinator
+
+database ~~~ maps
+maps ~~~ notification
+
+%% =========================
+%% STYLING
+%% =========================
+
+classDef person fill:#174F86,color:white,stroke:#174F86,stroke-width:2px;
+classDef container fill:#4A90D9,color:white,stroke:#174F86,stroke-width:2px;
+classDef external fill:#999999,color:white,stroke:#666666,stroke-width:2px;
+classDef database fill:#4A90D9,color:white,stroke:#174F86,stroke-width:2px;
+
+class student,driver,coordinator person;
+class web,api container;
+class maps,notification external;
+class database database;
+
+style SRJ fill:white,stroke:#777,stroke-width:2px,stroke-dasharray:8 5
 ```

@@ -5,6 +5,8 @@ C4Context
 
 title C4 System Context: SRJ Student Ride Booking (MVP)
 
+UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="1")
+
 Person(student, "Student", "Off-campus SORSU student who needs a ride to school")
 Person(driver, "Tricycle Driver", "Local driver who accepts student bookings")
 Person(coordinator, "Coordinator", "SRJ team member who manages drivers and reviews usage metrics")
@@ -20,4 +22,10 @@ Rel(coordinator, srj, "Manages drivers and reviews booking metrics", "HTTPS")
 
 Rel(srj, maps, "Asks for distance and ETA of a trip", "HTTPS/JSON")
 Rel(srj, notification, "Asks it to alert users about booking changes", "HTTPS/JSON")
+
+UpdateRelStyle(student, srj, $offsetY="-20")
+UpdateRelStyle(driver, srj, $offsetY="-10")
+UpdateRelStyle(coordinator, srj, $offsetY="10")
+UpdateRelStyle(srj, maps, $offsetY="20")
+UpdateRelStyle(srj, notification, $offsetY="30")
 ```

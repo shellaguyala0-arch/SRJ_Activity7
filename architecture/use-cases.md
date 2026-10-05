@@ -1,54 +1,40 @@
-# Diagram 3 – Use Case: SRJ Student Ride Booking (Must-have features)
-
-```mermaid
 flowchart LR
 
-Student(("👤<br/>Student"))
-Driver(("👤<br/>Tricycle Driver"))
-Coordinator(("👤<br/>Coordinator"))
-Maps["Maps Provider"]
-Notification["Notification Provider"]
+    Student[Student]
+    Driver[Driver]
+    Admin[Admin]
 
-subgraph SRJ["SRJ Ride Booking"]
+    subgraph System[Student Ride-Booking System]
 
-    UC1(["Track driver location"])
-    UC2(["Book a ride"])
-    UC3(["Cancel booking"])
-    UC4(["Register account"])
-    UC5(["Set availability"])
-    UC6(["Log in"])
-    UC7(["Accept booking"])
-    UC8(["Update trip status"])
-    UC9(["Manage drivers"])
-    UC10(["View usage metrics"])
+        UC1((Register / Login))
+        UC2((Request Ride))
+        UC3((Book Ride))
+        UC4((View Ride Status))
+        UC5((View Transport Updates))
+        UC6((Cancel Booking))
 
-end
+        UC7((View Ride Requests))
+        UC8((Accept Ride))
+        UC9((Update Ride Status))
 
-Student --- UC1
-Student --- UC2
-Student --- UC3
-Student --- UC4
-Student --- UC6
+        UC10((Manage Users))
+        UC11((Manage Drivers))
+        UC12((Manage Bookings))
 
-Driver --- UC5
-Driver --- UC6
-Driver --- UC7
-Driver --- UC8
+    end
 
-Coordinator --- UC6
-Coordinator --- UC9
-Coordinator --- UC10
+    Student --> UC1
+    Student --> UC2
+    Student --> UC3
+    Student --> UC4
+    Student --> UC5
+    Student --> UC6
 
-Maps -.-> UC1
-Maps -.-> UC2
+    Driver --> UC1
+    Driver --> UC7
+    Driver --> UC8
+    Driver --> UC9
 
-Notification -.-> UC7
-Notification -.-> UC8
-
-style SRJ fill:white,stroke:#555,stroke-width:2px
-style Student fill:white,stroke:#333
-style Driver fill:white,stroke:#333
-style Coordinator fill:white,stroke:#333
-style Maps fill:#eee,stroke:#555
-style Notification fill:#eee,stroke:#555
-```
+    Admin --> UC10
+    Admin --> UC11
+    Admin --> UC12
